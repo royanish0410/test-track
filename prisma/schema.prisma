@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role{
+  STUDENT
+  TEACHER
+}
+
+model User{
+  id  String  @id @default(uuid())
+  fullname  String
+  email String @unique
+  password  String
+  role Role
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  quizattempts  QuizAttempt[]
+  quizcreated Quiz[]
+
+  @@map("users")
+}
+
+model Subject{
+  id  String  @id @default(uuid())
+  name  String  @unique
+  quizzes Quiz[]
+
+  @@map("subjects")
+}
+
+model Quiz{
+  id  String  @id @default(uuid())
+  subjectid String
+  ofsubject Subject @relation(fields: [subjectid],references: [id])
+  number  Int
+  questionmodelid String
+  questionmodel Question[]
+  teacherid String
+  teacher User  @relation(fields: [teacherid],references: [id])
+  quizattempts  QuizAttempt[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("quizzes")
+}
+
+model QuizAttempt{
+  id  String  @id @default(uuid())
+  userid  String
+  user  User  @relation(fields: [userid],references: [id])
+  quizid  String
+  quiz  Quiz  @relation(fields: [quizid],references: [id])
+  score Int
+
+  @@map("quiz_attempts")
+}
+
+model Question{
+  id  String  @id @default(uuid())
+  quizid  String
+  forquiz Quiz  @relation(fields: [quizid],references: [id])
+  heading String
+  options String[]
+  correctone  String
+
+  @@map("questions")
+}
