@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@react-three/drei": "^10.0.8",
     "@react-three/fiber": "^9.1.2",
     "framer-motion": "^12.12.2",
@@ -17,6 +18,11 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "three": "^0.176.0"
+=======
+    "next": "^15.3.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+>>>>>>> 2960f4c4306af9c88616bab9ece1eb57684fcd3e
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
