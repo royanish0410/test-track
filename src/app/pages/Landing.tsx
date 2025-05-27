@@ -67,7 +67,7 @@ function BlinkingStars() {
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center px-6 py-16 space-y-12">
+    <div className="relative min-h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center px-6 pt-32 pb-16 space-y-12">
       {/* 3D Background Stars */}
       <div className="absolute inset-0 z-0">
         <Canvas>
@@ -78,8 +78,8 @@ export default function Home() {
         </Canvas>
       </div>
 
-      {/* Login/Register */}
-      <div className="absolute top-6 right-6 z-10 flex gap-4">
+      {/* Login/Register Buttons */}
+      <div className="absolute top-6 sm:top-8 right-4 z-10 flex flex-col sm:flex-row gap-2 sm:gap-4 items-end">
         <Link href="/login">
           <motion.button
             className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-800 text-white font-medium transition-all shadow-lg"
@@ -102,7 +102,7 @@ export default function Home() {
 
       {/* Heading */}
       <motion.h1
-        className="text-5xl sm:text-6xl font-bold text-center z-10 bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent"
+        className="text-4xl sm:text-6xl font-bold text-center z-10 bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
@@ -120,7 +120,7 @@ export default function Home() {
         A smart platform where <strong>teachers</strong> create quizzes and <strong>students</strong> attend them – fast, fair, and fun.
       </motion.p>
 
-      {/* Features */}
+      {/* Features Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10 max-w-4xl w-full z-10">
         <motion.div
           className="bg-white/10 backdrop-blur-lg rounded-xl p-6 shadow-md hover:bg-white/20 transition-all"
@@ -157,7 +157,7 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* CTA */}
+      {/* CTA Buttons */}
       <motion.div
         className="mt-12 flex gap-6 flex-wrap justify-center z-10"
         initial={{ opacity: 0, y: 40 }}
