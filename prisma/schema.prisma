@@ -7,6 +7,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -25,7 +26,7 @@ model User {
   email         String        @unique
   clerkId       String        @unique
   emailVerified Boolean       @default(false)
-  role          Role
+  role          Role?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   quizattempts  QuizAttempt[]
