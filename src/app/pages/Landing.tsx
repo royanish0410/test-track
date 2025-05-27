@@ -80,7 +80,7 @@ export default function Home() {
 
       {/* Login/Register Buttons */}
       <div className="absolute top-6 sm:top-8 right-4 z-10 flex flex-col sm:flex-row gap-2 sm:gap-4 items-end">
-        <Link href="/login">
+        <Link href="/sign-in">
           <motion.button
             className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-800 text-white font-medium transition-all shadow-lg"
             whileHover={{ scale: 1.05 }}
@@ -89,7 +89,7 @@ export default function Home() {
             Login
           </motion.button>
         </Link>
-        <Link href="/register">
+        <Link href="/sign-up">
           <motion.button
             className="px-4 py-2 rounded-lg border border-purple-400 text-purple-300 hover:bg-purple-700 hover:text-white transition-all shadow-lg"
             whileHover={{ scale: 1.05 }}
@@ -164,7 +164,7 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 0.5 }}
       >
-        <Link href="/register">
+        <Link href="/sign-up">
           <motion.button
             className="px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
             whileHover={{ scale: 1.05 }}
