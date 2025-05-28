@@ -2,14 +2,15 @@
 import { useSignUp } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { useClerk } from "@clerk/nextjs"
 
 export default function SignUp(){
 
-    const {isLoaded,setActive,signUp} = useSignUp();
+    const {isLoaded,signUp} = useSignUp();
+    const { signOut } = useClerk();
     const [emailaddress, setEmailaddress] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [fullname, setfullname] = useState<string>("");
-    const [role, setRole] = useState<string>("");
     const [pendingVerification, setPendingVerification] = useState<boolean>(false);
     const [code,setCode] = useState<string>("");
     const router = useRouter();
@@ -61,8 +62,10 @@ export default function SignUp(){
             }
             
             if (completeSignUp.status === 'complete') {
-                await setActive({ session: completeSignUp.createdSessionId })
-                router.push('/dashboard')
+                await signOut({
+                    sessionId:completeSignUp.createdSessionId as string,
+                    redirectUrl:process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
+                });
             }
         } catch (err) {
             console.error('Error:', err)
@@ -150,18 +153,6 @@ export default function SignUp(){
                     required
                     className="w-full px-3 py-2 border rounded-md"
                 />
-                </div>
-
-                <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Role</label>
-                <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-md"
-                >
-                    <option value="STUDENT">STUDENT</option>
-                    <option value="TEACHER">TEACHER</option>
-                </select>
                 </div>
 
                 <button
