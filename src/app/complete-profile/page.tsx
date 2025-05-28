@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation"
 const updateUserRole = async (role:string,user:any) => {
     try {
         const response = await fetch('/api/users/set-role', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            userId: user.id, // Clerk user ID
-            role: role
-        })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: user.id,
+                role: role
+            })
         });
 
         const data = await response.json();
@@ -57,7 +57,7 @@ const page = () => {
 
             await updateUserRole(role,user);
 
-            router.push("/dashboard")
+            router.push("/sign-in")
         } catch (error) {
             console.error('Error updating profile:', error)
         }
