@@ -21,7 +21,7 @@ export default function SignIn() {
 
             if (result.status === 'complete') {
                 await setActive({ session: result.createdSessionId })
-                router.push('/dashboard')
+                router.push('/check-role')
             } else {
                 console.log(result)
             }
