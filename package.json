@@ -12,6 +12,8 @@
     "@clerk/nextjs": "^6.20.0",
     "@prisma/adapter-neon": "^6.8.2",
     "@prisma/client": "^6.8.2",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-slot": "^1.2.3",
     "@react-three/drei": "^10.0.8",
     "@react-three/fiber": "^9.1.2",
     "class-variance-authority": "^0.7.1",
