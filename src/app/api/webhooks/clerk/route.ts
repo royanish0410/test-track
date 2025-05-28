@@ -93,9 +93,72 @@ async function handleUserCreated(data:UserJSON){
 }
 
 async function handleUserUpdate(data:UserJSON){
-    
+    try {
+
+        const {id,public_metadata,email_addresses,first_name,last_name} = data;
+
+        const existance = await prisma.user.findUnique({
+            where:{
+                clerkId:id
+            },
+            select:{
+                id:true
+            }
+        })
+
+        if(!existance){
+            throw new Error("User doesn't exists");
+        }
+
+        const fullname = `${first_name?.trim()} ${last_name?.trim()}`
+        const updateDatabaseResponse = await prisma.user.update({
+            where:{clerkId:id},
+            data:{
+                role:public_metadata?.role as Role,
+                fullname:fullname,
+                email:email_addresses[0]?.email_address,
+                emailVerified:email_addresses[0]?.verification?.status==="verified"
+            }
+        })
+
+        console.log("User updated:::");
+        console.log(updateDatabaseResponse);
+
+        return updateDatabaseResponse;
+    } catch (error) {
+        console.error("--------Error updating User data--------");
+        console.error(error);
+    }
 }
 
 async function handleUserDelete(id:string){
+    try {
+        const existance = await prisma.user.findUnique({
+            where:{
+                clerkId:id
+            },
+            select:{
+                id:true
+            }
+        })
 
+        if(!existance){
+            throw new Error("User doesn't exists");
+        }
+
+        const deleteResponse = await prisma.user.delete({
+            where:{
+                clerkId:id
+            }
+        })
+
+        if(!deleteResponse){
+            throw new Error("Deletion error");
+        }
+
+        console.log("User deleted with the database id : ",deleteResponse.id);
+    } catch (error) {
+        console.error("--------Error deleting User--------");
+        console.error(error);
+    }
 }
