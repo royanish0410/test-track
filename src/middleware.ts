@@ -24,49 +24,53 @@ const isAuthenticatedRoute = createRouteMatcher([
     '/api/student(.*)',
     '/api/teacher(.*)',
     '/api/settings(.*)',
-    '/profile(.*)'
+    '/profile(.*)',
+    '/check-role',
+    '/select-role'
 ])
 
-export default clerkMiddleware(async(auth, req) => {
-    const { userId, sessionClaims, redirectToSignIn } = await auth()
+export default clerkMiddleware();
 
-    if (isPublicRoute(req)) {
-        return NextResponse.next()
-    }
+// export default clerkMiddleware(async(auth, req) => {
+//     const { userId, sessionClaims, redirectToSignIn } = await auth()
 
-    if (!userId) {
-        return redirectToSignIn({ returnBackUrl: req.url })
-    }
+//     if (isPublicRoute(req)) {
+//         return NextResponse.next()
+//     }
 
-    const userRole = sessionClaims?.metadata?.role;
+//     if (!userId) {
+//         return redirectToSignIn({ returnBackUrl: req.url })
+//     }
 
-    if(!userRole){
-        if(req.nextUrl.pathname !== "/select-role"){
-            return NextResponse.redirect(new URL('/check-role',req.url))
-        }
-        return NextResponse.next();
-    }
+//     const userRole = sessionClaims?.metadata?.role;
 
-    if(isTeacherRoute(req) && userRole !== "TEACHER"){
+//     if (!userRole) {
+//         if (req.nextUrl.pathname === "/select-role" || req.nextUrl.pathname === "/check-role") {
+//             return NextResponse.next();
+//         }
+//         return NextResponse.redirect(new URL('/check-role', req.url))
+//     }
 
-        // TODO: API LEVEL RESTRICTION TO BE LATER
+//     if(isTeacherRoute(req) && userRole !== "TEACHER"){
 
-        return NextResponse.redirect(new URL('/teacher/dashboard',req.url))
-    }
+//         // TODO: API LEVEL RESTRICTION TO BE LATER
 
-    if(isStudentRoute(req) && userRole !== "STUDENT"){
+//         return NextResponse.redirect(new URL('/student/dashboard',req.url))
+//     }
 
-        // TODO: API LEVEL RESTRICTION TO BE LATER
+//     if(isStudentRoute(req) && userRole !== "STUDENT"){
 
-        return NextResponse.redirect(new URL('/student/dashboard',req.url))
-    }
+//         // TODO: API LEVEL RESTRICTION TO BE LATER
 
-    if(isAuthenticatedRoute(req)){
-        return NextResponse.next()
-    }
+//         return NextResponse.redirect(new URL('/teacher/dashboard',req.url))
+//     }
 
-    return NextResponse.redirect(new URL(`/${userRole === "STUDENT"?"student":"teacher"}/dashboard`,req.url))
-})
+//     if(isAuthenticatedRoute(req)){
+//         return NextResponse.next()
+//     }
+
+//     return NextResponse.redirect(new URL(`/${userRole === "STUDENT"?"student":"teacher"}/dashboard`,req.url))
+// })
 
 export const config = {
     matcher: [
