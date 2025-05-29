@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { useSignIn } from '@clerk/nextjs'
+import { useSignIn} from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 
 export default function SignIn() {
@@ -37,7 +37,7 @@ export default function SignIn() {
             await signIn.authenticateWithRedirect({
                 strategy: 'oauth_google',
                 redirectUrl: '/sign-in/sso-callback',
-                redirectUrlComplete: '/dashboard'
+                redirectUrlComplete: (process.env.NEXT_PUBLIC_CLERK_FALLBACK_REDIRECT_URL) as string
             })
         } catch (err) {
             console.error('Error:', err)
