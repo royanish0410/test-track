@@ -41,8 +41,9 @@ export default function SignUp(){
             await signUp.authenticateWithRedirect({
                 strategy: 'oauth_google',
                 redirectUrl: '/sign-up/sso-callback',
-                redirectUrlComplete: '/complete-profile'
+                redirectUrlComplete: '/check-role'
             })
+            
         } catch (err) {
             console.error('Error:', err)
         }
@@ -62,10 +63,7 @@ export default function SignUp(){
             }
             
             if (completeSignUp.status === 'complete') {
-                await signOut({
-                    sessionId:completeSignUp.createdSessionId as string,
-                    redirectUrl:process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL
-                });
+                router.push('/check-role');
             }
         } catch (err) {
             console.error('Error:', err)
