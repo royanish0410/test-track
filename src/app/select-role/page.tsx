@@ -15,7 +15,27 @@ export default function RoleSelector() {
     const {isLoaded,isSignedIn,user} = useUser();
     const router = useRouter();
 
-    if(!isLoaded || !isSignedIn || (user.publicMetadata?.role === "STUDENT"||user.publicMetadata?.role === "TEACHER")) return;
+    if (!isLoaded) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+                    <p className="mt-4">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!isSignedIn) {
+        router.push('/sign-in');
+        return null;
+    }
+
+    if (user.publicMetadata?.role === "STUDENT" || user.publicMetadata?.role === "TEACHER") {
+        const role = user.publicMetadata.role;
+        router.push(`/${role === "STUDENT" ? "student" : "teacher"}/dashboard`);
+        return null;
+    }
 
     const handleRoleSubmit = async (e:React.FormEvent) => {
         e.preventDefault()
@@ -37,10 +57,10 @@ export default function RoleSelector() {
                 throw new Error(`HTTP error status : ${updateResponse.status}`)
             }
             console.log("Data updated successfully.")
-
+            await user.reload();
             setIsDialogOpen(false);
 
-            router.push("/dashboard")
+            router.push(`/${selectedRole==="STUDENT"?"student":"teacher"}/dashboard`);
         } catch (error) {
             console.error("Failed due to : ",error);
         } finally {
