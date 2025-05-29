@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { GraduationCap, Loader2, Users } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { useUser } from "@clerk/nextjs"
+import { useUser,useAuth } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
 
 export default function RoleSelector() {
@@ -13,6 +13,7 @@ export default function RoleSelector() {
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
     const {isLoaded,isSignedIn,user} = useUser();
+    const {getToken} = useAuth();
     const router = useRouter();
 
     if (!isLoaded) {
@@ -27,6 +28,7 @@ export default function RoleSelector() {
     }
 
     if (!isSignedIn) {
+        console.log(isSignedIn);
         router.push('/sign-in');
         return null;
     }
@@ -56,11 +58,12 @@ export default function RoleSelector() {
             if(!updateResponse.ok){
                 throw new Error(`HTTP error status : ${updateResponse.status}`)
             }
-            console.log("Data updated successfully.")
-            await user.reload();
-            setIsDialogOpen(false);
 
-            router.push(`/${selectedRole==="STUDENT"?"student":"teacher"}/dashboard`);
+            const Responsetoken = await getToken();
+            setIsDialogOpen(false);
+            const responseReload = await user.reload();
+            window.location.href = `/${selectedRole === "STUDENT" ? "student" : "teacher"}/dashboard`;
+
         } catch (error) {
             console.error("Failed due to : ",error);
         } finally {
