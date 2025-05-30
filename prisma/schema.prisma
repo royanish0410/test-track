@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
   previewFeatures = ["driverAdapters"]
 }
 
@@ -51,6 +51,7 @@ model Quiz {
   questionmodel Question[]
   teacherid     String
   teacher       User          @relation(fields: [teacherid], references: [id])
+  endsAt        DateTime
   quizattempts  QuizAttempt[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
