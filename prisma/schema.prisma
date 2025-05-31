@@ -36,15 +36,17 @@ model User {
 }
 
 model Subject {
-  id      String @id @default(uuid())
-  name    String @unique
-  quizzes Quiz[]
+  id        String  @id @default(uuid())
+  name      String  @unique
+  imagelink String?
+  quizzes   Quiz[]
 
   @@map("subjects")
 }
 
 model Quiz {
   id            String        @id @default(uuid())
+  name          String
   subjectid     String
   ofsubject     Subject       @relation(fields: [subjectid], references: [id])
   number        Int
@@ -52,7 +54,7 @@ model Quiz {
   teacherid     String
   teacher       User          @relation(fields: [teacherid], references: [id])
   endsAt        DateTime
-  duration      DateTime
+  duration      Int
   quizattempts  QuizAttempt[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
