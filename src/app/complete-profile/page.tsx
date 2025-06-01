@@ -1,9 +1,10 @@
 'use client'
 import { useState, useEffect } from "react"
 import { useUser } from "@clerk/nextjs"
+import type { UserResource } from "@clerk/types"
 import { useRouter } from "next/navigation"
 
-const updateUserRole = async (role:string,user:any) => {
+const updateUserRole = async (role:string,user:UserResource) => {
     try {
         const response = await fetch('/api/users/set-role', {
             method: 'POST',
