@@ -1,7 +1,7 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { UserJSON, WebhookEvent, EmailAddress } from "@clerk/nextjs/server";
+import { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { Role } from "@/generated/prisma";
 
@@ -42,7 +42,6 @@ export async function POST(req:NextRequest){
 
         const {id} = event.data;
         const eventType = event.type;
-        const x = event.data;
 
         console.log(`Id ${id} has the eventType = ${eventType}`);
         console.log("BOdy::::::");
