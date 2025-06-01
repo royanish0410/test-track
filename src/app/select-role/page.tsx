@@ -147,7 +147,7 @@ export default function RoleSelector() {
                             <DialogHeader>
                                 <DialogTitle>Role selected as {selectedRole}</DialogTitle>
                                 <DialogDescription>
-                                    Your Role is selected as {selectedRole}, Are you sure? As this will be your final choice, you won't able to change it no more.
+                                    Your Role is selected as {selectedRole}, Are you sure? As this will be your final choice, you will not able to change it no more.
                                 </DialogDescription>
                             </DialogHeader>
                             <div>
