@@ -8,7 +8,8 @@ const isPublicRoute = createRouteMatcher([
     '/api/webhooks/clerk',
     '/api/public(.*)',
     '/about',
-    '/contact'
+    '/contact',
+    '/api/quiz(.*)'
 ])
 
 const isTeacherRoute = createRouteMatcher([
@@ -42,46 +43,7 @@ const isAuthenticatedRoute = createRouteMatcher([
 // }
 // );
 
-export default clerkMiddleware(async(auth, req) => {
-    const { userId, sessionClaims, redirectToSignIn } = await auth()
-
-    if (isPublicRoute(req)) {
-        return NextResponse.next()
-    }
-
-    if (!userId) {
-        return redirectToSignIn({ returnBackUrl: req.url })
-    }
-
-    const userRole = sessionClaims?.metadata?.role;
-
-    if (!userRole) {
-        if (req.nextUrl.pathname === "/select-role" || req.nextUrl.pathname === "/check-role") {
-            return NextResponse.next();
-        }
-        return NextResponse.redirect(new URL('/check-role', req.url))
-    }
-
-    if(isTeacherRoute(req) && userRole !== "TEACHER"){
-
-        // TODO: API LEVEL RESTRICTION TO BE LATER
-
-        return NextResponse.redirect(new URL('/student/dashboard',req.url))
-    }
-
-    if(isStudentRoute(req) && userRole !== "STUDENT"){
-
-        // TODO: API LEVEL RESTRICTION TO BE LATER
-
-        return NextResponse.redirect(new URL('/teacher/dashboard',req.url))
-    }
-
-    if(isAuthenticatedRoute(req)){
-        return NextResponse.next()
-    }
-
-    return NextResponse.redirect(new URL(`/${userRole === "STUDENT"?"student":"teacher"}/dashboard`,req.url))
-})
+export default clerkMiddleware()
 
 export const config = {
     matcher: [
