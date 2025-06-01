@@ -29,7 +29,7 @@ const updateUserRole = async (role:string,user:any) => {
     }
 };
 
-const page = () => {
+const Page = () => {
 
     const { isLoaded, user } = useUser();
     const [fullName, setFullName] = useState<string>("");
@@ -103,4 +103,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
