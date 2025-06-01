@@ -59,9 +59,9 @@ export default function RoleSelector() {
                 throw new Error(`HTTP error status : ${updateResponse.status}`)
             }
 
-            const Responsetoken = await getToken();
+            await getToken();
             setIsDialogOpen(false);
-            const responseReload = await user.reload();
+            await user.reload();
             window.location.href = `/${selectedRole === "STUDENT" ? "student" : "teacher"}/dashboard`;
 
         } catch (error) {

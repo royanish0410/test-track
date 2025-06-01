@@ -2,12 +2,10 @@
 import { useSignUp } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { useClerk } from "@clerk/nextjs"
 
 export default function SignUp(){
 
     const {isLoaded,signUp} = useSignUp();
-    const { signOut } = useClerk();
     const [emailaddress, setEmailaddress] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [fullname, setfullname] = useState<string>("");

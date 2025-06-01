@@ -19,7 +19,7 @@ const updateUserRole = async (role:string,user:any) => {
         const data = await response.json();
 
         if (!response.ok) {
-        throw new Error(data.error || 'Failed to update role');
+            throw new Error('Failed to update role');
         }
 
         return data;
