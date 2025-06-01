@@ -1,40 +1,40 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
+import { clerkMiddleware } from '@clerk/nextjs/server'
+// import { NextResponse } from 'next/server'
 
-const isPublicRoute = createRouteMatcher([
-    '/',
-    '/sign-in(.*)',
-    '/sign-up(.*)',
-    '/api/webhooks/clerk',
-    '/api/public(.*)',
-    '/about',
-    '/contact',
-    '/api/quiz(.*)'
-])
+// const isPublicRoute = createRouteMatcher([
+//     '/',
+//     '/sign-in(.*)',
+//     '/sign-up(.*)',
+//     '/api/webhooks/clerk',
+//     '/api/public(.*)',
+//     '/about',
+//     '/contact',
+//     '/api/quiz(.*)'
+// ])
 
-const isTeacherRoute = createRouteMatcher([
-    "/teacher/allquizzes",
-    "/teacher/createquizzes",
-    "/teacher/dashboard",
-    "/teacher/score",
-])
+// const isTeacherRoute = createRouteMatcher([
+//     "/teacher/allquizzes",
+//     "/teacher/createquizzes",
+//     "/teacher/dashboard",
+//     "/teacher/score",
+// ])
 
-const isStudentRoute = createRouteMatcher([
-    "/student/attemptquiz",
-    "/student/dashboard",
-    "/student/quizlists",
-    "/student/score",
-])
+// const isStudentRoute = createRouteMatcher([
+//     "/student/attemptquiz",
+//     "/student/dashboard",
+//     "/student/quizlists",
+//     "/student/score",
+// ])
 
-const isAuthenticatedRoute = createRouteMatcher([
-    '/api/users(.*)',
-    '/api/student(.*)',
-    '/api/teacher(.*)',
-    '/api/settings(.*)',
-    '/profile(.*)',
-    '/check-role',
-    '/select-role'
-])
+// const isAuthenticatedRoute = createRouteMatcher([
+//     '/api/users(.*)',
+//     '/api/student(.*)',
+//     '/api/teacher(.*)',
+//     '/api/settings(.*)',
+//     '/profile(.*)',
+//     '/check-role',
+//     '/select-role'
+// ])
 
 // export default clerkMiddleware(async(auth,req)=>{
 //     const {userId,sessionClaims,} = await auth();
