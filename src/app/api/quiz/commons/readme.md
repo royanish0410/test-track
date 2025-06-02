@@ -1,5 +1,6 @@
 # get-quiz : 
 ## This route takes an quiz-id as url paramter and returns a specific quiz Like the following output
+```
 "data": {
     "createdAt": "2025-06-02T19:03:31.989Z",
     "duration": 15,
@@ -32,9 +33,11 @@
         "quizattempts": 0
     }
 }
+```
 
 # get-quizzes-by-subject
 ## This route takes the subject-id and returns all the quizzes under the subject. Like the following response
+```
 "subjectQuiz": {
     "id": "subject-id",
     "name": "CHEMISTRY",
@@ -96,9 +99,11 @@
         }
     ]
 }
+```
 
 # get-subjects
 ## This route takes nothing but returns the entered subjects and their number of quizzes. Like the following.
+```
 {
     "message": "Subject fetching successful.",
     "data": [
@@ -119,10 +124,12 @@
         }
     ]
 }
+```
 
 # list-quizzes
 ## This route takes query params in the URL such as subjects(if no subject mentioned it is considered as all the subjects) and sorting types as sortType(It's an enum) and a count(default 10). And gives like the following response.
 ### sortType must be one of these : "ATIME" | "DTIME" | "ADUR" | "DDUR" | "AENDS" | "DENDS"
+```
 {
     "message": "Successful fetch",
     "quizzesResponse": [
@@ -171,9 +178,11 @@
     ],
     "length": 2
 }
+```
 
 # list-subjects
 ## This doesn't take any body or parameters but returns only the subject id and their name. Like the following
+```
 {
     "message": "All subjects fetched successfully",
     "data": [
@@ -192,3 +201,4 @@
     ],
     "length": 3
 }
+```

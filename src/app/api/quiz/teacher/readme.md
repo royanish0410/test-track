@@ -1,6 +1,7 @@
 # add-question
 ## This routes takes the a quiz-id as URL param and along with the body like : {heading,options,correctone}
 ### heading: this is the main question, options: this is an array of the options(atleast 2 options must be there), correctone: this is a correct option(must from the array.)
+```
 {
     "message": "Question Created successfully",
     "data": {
@@ -16,10 +17,12 @@
         "correctone": "5"
     }
 }
+```
 
 # create-quiz
 ## This route take the nothing in the URL param but takes the body like : {subjectid,teacherclerkid,endsAt,duration,quizname}
 ### subjectid: id of the subject, teacherclerkid: clerk id of the teacher, endsAt: the Time stamp of the ending of the quiz, duration: duration of one quiz, quizname: (optional) specify the name if neccessary.
+```
 {
     "message": "Quiz created successfully",
     "data": {
@@ -34,10 +37,12 @@
         "updatedAt": "2025-06-02T19:55:30.040Z"
     }
 }
+```
 
 # create-subject
 ## This route takes nothing in the URl param but takes the body like : {subjectName}
 ### subjectName: This is the name of the subject, give anyway you like and it will be stored in uppercase.
+```
 {
     "message": "Document creation successful",
     "data": {
@@ -45,6 +50,7 @@
         "name": "MATH"
     }
 }
+```
 
 # delete-quiz
 ## this route takes an URL param of the quiz-id, to be specific you want to delete.
@@ -59,6 +65,7 @@
 # update-quiz
 ## This route takes an URL param of quidiz and body like : {name,endsAt,duration}
 ## name: name of the quiz, endsAt: ending timestamp, duration: how long the quiz will continue before auto submit.
+```
 {
     "message": "Update Complete",
     "data": {
@@ -73,3 +80,4 @@
         "updatedAt": "2025-05-31T08:48:18.900Z"
     }
 }
+```
