@@ -29,58 +29,111 @@ model User {
   role          Role?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
-  quizattempts  QuizAttempt[]
-  quizcreated   Quiz[]
+  quizattempts  MockQuizAttempt[]
+  createdMockQuiz MockQuiz[]
 
   @@map("users")
 }
 
-model Subject {
-  id        String  @id @default(uuid())
-  name      String  @unique
-  imagelink String?
-  quizzes   Quiz[]
+model MockQuiz{
+  id  String  @id @default(uuid())
+  name  String
+  number  Int
+  endsAt  DateTime
+  duration  Int
+  teacherid String
+  teacher User @relation(fields: [teacherid], references: [id])
+  quizsections  QuizSection[]
+  MockQuizAttempt MockQuizAttempt[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("mock_quizzes")
+}
+
+model MockQuizAttempt{
+  id  String  @id @default(uuid())
+  score Int
+  studentId String
+  student User  @relation(fields: [studentId],references: [id])
+  
+  mockQuizId  String
+  mockQuiz  MockQuiz  @relation(fields: [mockQuizId],references: [id])
+
+  attemptedAt DateTime  @default(now())
+  completedAt DateTime?
+
+  @@unique([studentId,mockQuizId])
+  @@map("mock_quiz_attempts")
+}
+
+model QuizSection{
+  id  String  @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  subjectId String
+  subject Subject @relation(fields: [subjectId],references: [id])
+
+  mockQuizId  String
+  mockQuiz  MockQuiz  @relation(fields: [mockQuizId],references: [id])
+
+  questionSection QuestionSection[]
+
+  @@map("quiz_sections")
+}
+
+model Subject{
+  id  String @id  @default(uuid())
+  name  String
+  imgUrl  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  quizSection QuizSection[]
+  questionSubjects  QuestionSubject[]
 
   @@map("subjects")
 }
 
-model Quiz {
-  id            String        @id @default(uuid())
-  name          String
-  subjectid     String
-  ofsubject     Subject       @relation(fields: [subjectid], references: [id])
-  number        Int
-  questionmodel Question[]
-  teacherid     String
-  teacher       User          @relation(fields: [teacherid], references: [id])
-  endsAt        DateTime
-  duration      Int
-  quizattempts  QuizAttempt[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+model Question{
+  id  String  @id @default(uuid())
+  question  String?
+  questionImg String?
+  options String[]
+  correctOne  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  @@map("quizzes")
-}
-
-model QuizAttempt {
-  id     String @id @default(uuid())
-  userid String
-  user   User   @relation(fields: [userid], references: [id])
-  quizid String
-  quiz   Quiz   @relation(fields: [quizid], references: [id])
-  score  Int
-
-  @@unique([userid, quizid])
-  @@map("quiz_attempts")
-}
-
-model Question {
-  id         String   @id @default(uuid())
-  quizid     String
-  forquiz    Quiz     @relation(fields: [quizid], references: [id])
-  heading    String
-  options    String[]
-  correctone String
+  questionSubjects  QuestionSubject[]
+  questionSection QuestionSection[]
 
   @@map("questions")
+}
+
+model QuestionSubject{
+  id  String  @id @default(uuid())
+
+  questionId  String
+  question  Question  @relation(fields: [questionId],references: [id])
+
+  subjectId String
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@unique([questionId,subjectId])
+  @@map("question_subjects")
+}
+
+model QuestionSection{
+  id  String  @id @default(uuid())
+
+  questionId  String
+  question  Question  @relation(fields: [questionId],references: [id])
+
+  quizSectionId String
+  quizSection QuizSection @relation(fields: [quizSectionId],references: [id])
+
+  @@unique([questionId,quizSectionId])
+
+  @@map("question_sections")
 }
