@@ -12,11 +12,11 @@ export async function POST(request: NextRequest) {
     try {
         const requestBody = await request.json();
         const {
-            subjectid,
             teacherclerkid,
             endsAt,
             duration,
-            quizname
+            quizname,
+            quizSections
         } = requestBody;
 
         if(!teacherclerkid){
@@ -37,66 +37,172 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({message:"No teacher exists with the given id."},{status:403});
         }
 
-        if(!subjectid){
-            return NextResponse.json({message:"No subject Id provided."},{status:400});
-        }
-
-        const existenceOfSubject = await prisma.subject.findUnique({
-            where:{
-                id:subjectid
-            },
-            select:{
-                id:true,
-                name:true,
-            }
-        })
-
-        if(!existenceOfSubject){
-            return NextResponse.json({message:"No such subject exists with the given id"},{status:400});
-        }
-
-        const endsAtDateType = new Date(endsAt);
-
-        const quizLatestNumber = await prisma.quiz.aggregate({
-            where:{
-                subjectid:subjectid,
-            },
-            _count:{
-                id:true
-            },
-            _max:{
-                number:true
-            }
-        })
-
-        const latestNumber = quizLatestNumber._count?.id === 0 ? 1 : (quizLatestNumber._max?.number ?? 1);
-
-        const createResponse = await prisma.quiz.create({
-            data:{
-                name:quizname?quizname:generateTheNameString(existenceOfSubject.name, new Date(),latestNumber),
-                duration:duration,
-                endsAt:endsAtDateType,
-                number:latestNumber,
-                createdAt:new Date(),
-                subjectid:subjectid,
-                teacherid:existenceOfTeacher.id
-            },
-        })
-
-        if(!createResponse){
+        if(duration === undefined || duration<=0){
             return NextResponse.json({
-                message:"Quiz Creation Failed"
+                message:"Invalid Duration type",
+                duration
             },{
-                status:500
+                status:400
             })
         }
 
+        if(!quizSections || !Array.isArray(quizSections) || quizSections.length === 0){
+            return NextResponse.json({
+                message:"The quiz Section contains 0 elements or not in array type.",
+                quizSections
+            },{
+                status:400
+            })
+        }
+
+        if(!endsAt){
+            return NextResponse.json({
+                message:"Ending time of the quiz is not mentioned. It is a necessary field"
+            },{
+                status:400
+            })
+        }
+
+        const subjectIds = [...new Set(quizSections.map(section=>section.subjectId))];
+        const existingSubjects = await prisma.subject.findMany({
+            where:{
+                id:{
+                    in:subjectIds
+                }
+            },
+            select:{
+                id:true
+            }
+        })
+
+        if(subjectIds.length !== existingSubjects.length){
+            const missingSubjects = subjectIds.filter(id=>!existingSubjects.find(subject=>subject.id === id));
+            return NextResponse.json({
+                message:"Invalid subject ids provided, no such subject found on the given ids.",
+                ids:missingSubjects
+            },{
+                status:404
+            })
+        }
+
+        const teacherId = await prisma.user.findUnique({
+            where:{
+                clerkId:teacherclerkid,
+                role:"TEACHER"
+            },
+            select:{
+                id:true
+            }
+        })
+
+        const lastQuiz = await prisma.mockQuiz.findFirst({
+            where:{
+                teacherId:teacherId.id
+            },
+            orderBy:{
+                number:'desc'
+            },
+            select:{
+                number:true
+            }
+        })
+        const nextNumber = (lastQuiz?.number ?? 0) + 1;
+        const quizName = quizname ?? generateTheNameString("MOCK-QUIZ",new Date(),nextNumber)
+
+        //Transaction Initiation
+        console.log("Transaction Inititated.")
+        const result = await prisma.$transaction(async (tx)=>{
+
+            //MockQuiz document creation
+            console.log("Mock quiz document creating for the transaction")
+            const mockQuizDoc = await tx.mockQuiz.create(
+                {
+                    data:{
+                        name:quizName,
+                        number:nextNumber,
+                        endsAt: new Date(endsAt),
+                        duration: duration,
+                        teacherId:teacherId.id
+                    },
+                }
+            )
+            console.log(mockQuizDoc);
+            console.log("Mock quiz document created")
+
+            const quizSectionFinalDocuments = []
+
+            //Creating QuizSections
+            console.log("Creating... QuizSections")
+            for(const section of quizSections){
+                const {subjectId,questions} = section;
+                const questionDocs = []
+
+                console.log("Creating QuizSection for the subject ",subjectId)
+                const quizSectionDocument = await tx.quizSection.create({
+                    data:{
+                        subjectId:subjectId,
+                        mockQuizId:mockQuizDoc.id
+                    }
+                })
+                console.log("Created... Quiz Document");
+                console.log(quizSectionDocument);
+
+                console.log("Creating... Questions");
+                for(const Qs of questions){
+                    const {question,options,correctone} = Qs;
+                    const questionObj = await tx.question.create({
+                        data:{
+                            question:question,
+                            correctOne: correctone,
+                            options:options 
+                        },
+                        select:{
+                            id:true,
+                            question:true,
+                            correctOne:true,
+                            options:true,
+                        }
+                    })
+                    console.log("Question document created");
+                    console.log(questionObj)
+                    const questionSection = await tx.questionSection.create({
+                        data:{
+                            questionId:questionObj.id,
+                            quizSectionId:quizSectionDocument.id
+                        }
+                    })
+                    console.log("Question Section (question-quizsection link) document created");
+                    console.log(questionSection);
+                    const questionSubject = await tx.questionSubject.create({
+                        data:{
+                            questionId:questionObj.id,
+                            subjectId:subjectId
+                        }
+                    })
+                    console.log("Question Subject (question-subject link) document created");
+                    console.log(questionSubject);
+                    questionDocs.push(questionObj);
+                }
+
+                quizSectionFinalDocuments.push({
+                    quizSectionDocument,
+                    questionDocs
+                });
+            }
+
+            return {
+                mockQuizDoc,
+                quizSectionFinalDocuments
+            }
+        })
+
         return NextResponse.json({
-            message:"Quiz created successfully",
-            data:createResponse
+            message:"Created quiz Successfully",
+            data:result
         },{
             status:201
         })
+
     } catch (error) {
         console.log("Error at creating Quiz ::::: ");
         console.error(error);
