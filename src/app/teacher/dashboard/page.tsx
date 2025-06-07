@@ -3,6 +3,7 @@
 import { SignOutButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -19,81 +20,86 @@ const cardVariants = {
 }
 
 const TeacherDashboard = () => {
+  const [darkMode, setDarkMode] = useState(false)
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode)
+  }
+
   const cards = [
     {
       title: 'Create Quiz',
       description: 'Upload PDFs or type questions for new JEE-style quizzes.',
       link: '/teacher/createquizzes',
-      color: 'bg-blue-200',
+      color: darkMode ? 'bg-blue-700' : 'bg-blue-200',
     },
     {
       title: 'All Quizzes',
       description: 'Manage and edit all existing quizzes.',
       link: '/teacher/allquizzes',
-      color: 'bg-green-200',
+      color: darkMode ? 'bg-green-700' : 'bg-green-200',
     },
     {
       title: 'Scores',
       description: 'Analyze student results and performance.',
       link: '/teacher/score',
-      color: 'bg-yellow-200',
+      color: darkMode ? 'bg-yellow-600' : 'bg-yellow-200',
     },
   ]
 
   return (
-    <div className="relative min-h-screen w-full bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-900 px-4 py-6 overflow-hidden">
+    <div className={`relative min-h-screen w-full ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800 text-white' : 'bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-900'} px-4 py-6 overflow-hidden`}>
+      
       {/* Animated Background Circles */}
       <motion.div
         className="absolute -top-20 -left-20 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-60"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.6, 0.8, 0.6],
-        }}
-        transition={{
-          duration: 8,
-          ease: "easeInOut",
-          repeat: Infinity,
-          repeatType: "reverse"
-        }}
+        animate={{ scale: [1, 1.2, 1], opacity: [0.6, 0.8, 0.6] }}
+        transition={{ duration: 8, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
       />
       <motion.div
         className="absolute -bottom-20 -right-20 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] bg-pink-300 rounded-full mix-blend-multiply filter blur-2xl opacity-60"
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.6, 0.7, 0.6],
-        }}
-        transition={{
-          duration: 6,
-          ease: "easeInOut",
-          repeat: Infinity,
-          repeatType: "reverse"
-        }}
+        animate={{ scale: [1, 1.1, 1], opacity: [0.6, 0.7, 0.6] }}
+        transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
       />
 
-      <div className="relative flex flex-col items-center mb-8 sm:mb-12">
+      {/* Top Section: Header & Buttons */}
+      <div className="flex justify-between items-center px-4 sm:px-8 mb-10">
         <motion.h1
-          className="text-3xl sm:text-5xl font-extrabold text-center mb-4"
+          className={`text-3xl sm:text-5xl font-extrabold ${darkMode ? 'text-indigo-300' : 'text-indigo-800'}`}
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, type: 'spring', stiffness: 100 }}
         >
           Teacher Dashboard
         </motion.h1>
+
+        <div className="flex items-center gap-4">
+          {/* Toggle Button */}
+          <motion.button
+            onClick={toggleTheme}
+            className="p-2 rounded-full text-sm bg-white shadow"
+            whileTap={{ scale: 0.9 }}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </motion.button>
+
+          {/* Sign Out Button */}
+          <motion.div
+            className="bg-red-200 rounded-full px-4 py-1 shadow-md"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, type: 'spring', stiffness: 100 }}
+          >
+            <SignOutButton>
+              <button className="text-sm font-semibold text-red-700 hover:underline">
+                Sign Out
+              </button>
+            </SignOutButton>
+          </motion.div>
+        </div>
       </div>
 
-      <motion.div
-        className="absolute right-4 top-16 p-2 sm:p-3 rounded-xl shadow-md bg-red-200 text-center flex items-center justify-center"
-        initial={{ opacity: 0, y: -40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, type: 'spring', stiffness: 100 }}
-      >
-        <SignOutButton>
-          <button className="text-base sm:text-lg font-medium text-red-600 hover:underline">
-            Sign Out
-          </button>
-        </SignOutButton>
-      </motion.div>
-
+      {/* Dashboard Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 max-w-6xl mx-auto relative z-10">
         {cards.map((card, i) => (
           <Link href={card.link} key={i} className="block">
@@ -106,7 +112,7 @@ const TeacherDashboard = () => {
               whileHover="hover"
             >
               <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-center">{card.title}</h2>
-              <p className="text-sm sm:text-base text-gray-700 text-center">{card.description}</p>
+              <p className={`text-sm sm:text-base ${darkMode ? 'text-gray-200' : 'text-gray-700'} text-center`}>{card.description}</p>
             </motion.div>
           </Link>
         ))}
