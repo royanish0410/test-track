@@ -6,7 +6,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { questi
         const { questionid } = await params;
         const requestBody = await request.json();
         const {
-            heading,
+            question,
             options,
             correctone
         } = requestBody;
@@ -25,8 +25,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { questi
             },
             select:{
                 id:true,
-                heading:true,
-                correctone:true,
+                question:true,
+                correctOne:true,
                 options:true
             }
         })
@@ -36,11 +36,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { questi
                 message:"No question available with the given id",
                 id:questionid
             },{
-                status:400
+                status:404
             })
         }
 
-        if(!Array.isArray(options)){
+        if(!Array.isArray(options) || options.length <= 1 ){
             return NextResponse.json({
                 message:"Options Invalid Type or Length. Option must have at least 2 options.",
             },{
@@ -51,7 +51,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { questi
         if(options.length >= 2){
             if(!options.includes(correctone)){
                 return NextResponse.json({
-                    message:"Correct Option must be one of the options",
+                    message:"Correct Option must be one of the options if you want to update the options entirely.",
                     options,
                     correctone
                 },{
@@ -70,19 +70,53 @@ export async function PATCH(request: NextRequest, { params }: { params: { questi
             }
         }
 
-        
-
         const updateQuestion = await prisma.question.update({
             where:{
-                id:questionid
+                id:questionid,
             },
             data:{
-                heading: heading ?? existenceOfQuestion.heading,
+                question: (question===""?null:question )?? existenceOfQuestion.question,
                 options: options.length===0?existenceOfQuestion.options:options,
-                correctone: correctone ?? existenceOfQuestion.correctone
+                correctOne: correctone ?? existenceOfQuestion.correctOne
             }
         })
-    } catch (error) {
+
+        if(!updateQuestion){
+            return NextResponse.json({
+                message:"Question Updated Failed."
+            },{
+                status:500
+            })
         
+        }
+        return NextResponse.json({
+            message:"Question Updated successfully.",
+            oldQuestionModel:existenceOfQuestion,
+            updateData:updateQuestion
+        },{
+            status:202
+        })
+    } catch (error) {
+        console.log("Error at deleting Quiz ::::: ");
+        console.error(error);
+        if (error && typeof error === 'object' && 'code' in error) {
+            const code = (error as { code?: string }).code;
+            if (code === 'P2025') {
+                return NextResponse.json(
+                    { error: 'User not found in database' },
+                    { status: 404 }
+                );
+            }
+        }
+        if (error && typeof error === 'object' && 'status' in error) {
+            const status = (error as { status?: number }).status;
+            if (status === 404) {
+                return NextResponse.json(
+                    { error: 'Object not found in ....' },
+                    { status: 404 }
+                );
+            }
+        }
+        return NextResponse.json({message:"Something Went Wrong during quiz deleting",error:error},{status:500});
     }
 }
