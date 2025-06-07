@@ -27,7 +27,7 @@ export async function PATCH(request: NextRequest,{ params }: { params: { quizid:
             });
         }
 
-        const existenceOfQuiz = await prisma.quiz.findUnique({
+        const existenceOfQuiz = await prisma.mockQuiz.findUnique({
             where:{
                 id:quizid,
             },
@@ -48,7 +48,7 @@ export async function PATCH(request: NextRequest,{ params }: { params: { quizid:
             })
         }
 
-        const updatedResponse = await prisma.quiz.update({
+        const updatedResponse = await prisma.mockQuiz.update({
             where:{
                 id:quizid
             },

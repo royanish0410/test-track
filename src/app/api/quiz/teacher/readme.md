@@ -179,6 +179,45 @@
 ```
 ***
 
+# Quiz fields Updating
+## Method: PATCH
+## Route: /api/quiz/teacher/update-quiz/:quizid
+
+## Request Body >
+```
+{
+    "duration": 45,
+}
+```
+The followings are the fields we can add by requirement.
+
+| Key           | Value          | Description             |
+| ------------- | -------------- | ----------------------- |
+|  name      | string | Name of the quiz (the heading).
+|  endAt     | string | The Ending Date and time of the mock quiz. |
+|  duration  | number | Duration of the mock quiz exam.            |
+
+
+## Response Body >
+```
+{
+    "message": "Update Complete",
+    "data": {
+        "id": "02d831b2-c0eb-45e6-92c1-54f759535f4b",
+        "name": "All Fundamentals Exam",
+        "number": 2,
+        "endsAt": "2025-07-13T12:30:00.000Z",
+        "duration": 45,
+        "teacherId": "362b103d-0b2c-40d4-b014-e2f5a94e842a",
+        "createdAt": "2025-06-06T19:35:28.230Z",
+        "updatedAt": "2025-06-07T11:23:53.466Z"
+    }
+}
+```
+
+
+***
+
 # delete-quiz
 ## this route takes an URL param of the quiz-id, to be specific you want to delete.
 ⚠️ **Warning:** This action will delete all your data permanently. And this isn't implemented properly yet.
