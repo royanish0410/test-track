@@ -11,7 +11,7 @@ export async function DELETE(_: NextRequest,{ params }: { params: { quizid: stri
             })
         }
 
-        const existenceOfQuiz = await prisma.quiz.findUnique({
+        const existenceOfQuiz = await prisma.mockQuiz.findUnique({
             where:{
                 id:quizid
             },
@@ -29,7 +29,7 @@ export async function DELETE(_: NextRequest,{ params }: { params: { quizid: stri
             })
         }
 
-        const deleteResponse = await prisma.quiz.delete({
+        const deleteResponse = await prisma.mockQuiz.delete({
             where:{
                 id:quizid
             }
@@ -51,6 +51,24 @@ export async function DELETE(_: NextRequest,{ params }: { params: { quizid: stri
     } catch (error) {
         console.log("Error at deleting Quiz ::::: ");
         console.error(error);
+        if (error && typeof error === 'object' && 'code' in error) {
+            const code = (error as { code?: string }).code;
+            if (code === 'P2025') {
+                return NextResponse.json(
+                    { error: 'Document not found in database' },
+                    { status: 404 }
+                );
+            }
+        }
+        if (error && typeof error === 'object' && 'status' in error) {
+            const status = (error as { status?: number }).status;
+            if (status === 404) {
+                return NextResponse.json(
+                    { error: 'Object not found in mock quiz model' },
+                    { status: 404 }
+                );
+            }
+        }
         return NextResponse.json({message:"Something Went Wrong during quiz deleting",error:error},{status:500});
     }
 }
