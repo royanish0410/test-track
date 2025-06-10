@@ -1,10 +1,9 @@
 import prisma from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server'
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ questionid:string }> }) {
     try {
-        const url = new URL(request.url);
-        const questionid = url.pathname.split("/").pop()
+        const { questionid } = await params;
 
         const requestBody = await request.json();
         const {

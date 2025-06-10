@@ -4,9 +4,7 @@ import { NextResponse, NextRequest } from 'next/server'
 
 export async function GET(_: NextRequest) {
     try {
-        // const { userId } = await auth();
-
-        const userId = "user_2xwfofyCl4SSZCDvnT6eqY6ntFj"
+        const { userId } = await auth();
 
         if(!userId){
             return NextResponse.json({

@@ -2,7 +2,7 @@ import prisma from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse, NextRequest } from 'next/server'
 
-export async function GET(_: NextRequest,{ params }: { params: { quizid: string } }) {
+export async function GET(_: NextRequest,{ params }: { params: Promise<{ quizid: string }> }) {
     try {
 
         //QuizId grabbing

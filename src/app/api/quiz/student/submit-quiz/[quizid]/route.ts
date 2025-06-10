@@ -2,12 +2,11 @@ import prisma from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse, NextRequest } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{quizid:string}> } ) {
     try {
 
         //QuizId grabbing
-        const url = new URL(request.url);
-        const quizid = url.pathname.split("/").pop();
+        const { quizid } = await params;
 
         if(!quizid){
             return NextResponse.json({

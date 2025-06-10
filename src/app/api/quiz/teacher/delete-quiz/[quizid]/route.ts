@@ -1,10 +1,9 @@
 import prisma from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server'
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ quizid: string }> }) {
     try {
-        const url = new URL(request.url);
-        const quizid = url.pathname.split("/").pop()
+        const { quizid } = await params;
 
         if(!quizid){
             return NextResponse.json({
