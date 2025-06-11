@@ -1040,7 +1040,7 @@ export default function MyQuizzesPage() {
             <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{error}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
-                onClick={testConnection}
+                // onClick={testConnection}
                 className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-colors ${
                   darkMode ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"
                 }`}
