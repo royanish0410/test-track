@@ -429,11 +429,11 @@ export default function MyQuizzesPage() {
                     : "bg-gradient-to-br from-rose-500 to-orange-500"
                 }`}
               >
-                <span className="text-white font-bold text-lg">T</span>
+                <span className="text-white font-bold text-lg">B</span>
               </div>
               <div className="hidden sm:block">
                 <h1 className="font-bold text-lg bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  TeacherHub
+                  Brahmastra
                 </h1>
                 <p className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Education Platform</p>
               </div>
