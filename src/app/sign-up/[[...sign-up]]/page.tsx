@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 export default function SignUp() {
-  const { isLoaded, signUp } = useSignUp()
+  const { isLoaded, signUp, setActive } = useSignUp()
   const [emailaddress, setEmailaddress] = useState('')
   const [password, setPassword] = useState('')
   const [fullname, setFullname] = useState('')
@@ -56,6 +56,7 @@ export default function SignUp() {
       const completeSignUp = await signUp.attemptEmailAddressVerification({ code })
 
       if (completeSignUp.status === 'complete') {
+        await setActive({session:completeSignUp.createdSessionId});
         router.push('/check-role')
       } else {
         console.log(JSON.stringify(completeSignUp, null, 2))
@@ -93,7 +94,7 @@ export default function SignUp() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-           Sign Up
+            Sign Up
         </motion.h1>
 
         <motion.button

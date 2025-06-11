@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { GraduationCap, Loader2, Users } from "lucide-react"
@@ -16,6 +16,20 @@ export default function RoleSelector() {
     const {getToken} = useAuth();
     const router = useRouter();
 
+    useEffect(()=>{
+
+        if (user.publicMetadata?.role === "STUDENT" || user.publicMetadata?.role === "TEACHER") {
+            const role = user.publicMetadata.role;
+            router.push(`/${role === "STUDENT" ? "student" : "teacher"}/dashboard`);
+            return null;
+        }
+        if (!isSignedIn) {
+            console.log(isSignedIn);
+            router.push('/sign-in');
+            return null;
+        }
+    },[isSignedIn,user,isLoaded])
+
     if (!isLoaded) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -25,12 +39,6 @@ export default function RoleSelector() {
                 </div>
             </div>
         );
-    }
-
-    if (!isSignedIn) {
-        console.log(isSignedIn);
-        router.push('/sign-in');
-        return null;
     }
 
     if (user.publicMetadata?.role === "STUDENT" || user.publicMetadata?.role === "TEACHER") {

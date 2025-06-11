@@ -25,7 +25,7 @@ export default function CheckRolePage() {
                 router.push("/teacher/dashboard");
             }
         }
-    }, [isLoaded, user, router, isRedirecting]);
+    }, [isLoaded, user, isRedirecting]);
 
     if (!isLoaded) {
         return (
