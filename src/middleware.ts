@@ -42,9 +42,12 @@ export default clerkMiddleware(async(auth,req)=>{
     if(userId && isPublicRoute(req)){
         const { metadata } = sessionClaims;
         const userRole = metadata?.role;
-        console.log(`userId : ${userId} and No need to sign-in or sign-up again. Redirecting..... To ${userRole} dashboard`);
-        const dashboardUrl = new URL(`/${userRole.toLowerCase().trim()}/dashboard/`,req.url)
-        return NextResponse.redirect(dashboardUrl);
+        if(userRole){
+            console.log(`userId : ${userId} and No need to sign-in or sign-up again. Redirecting..... To ${userRole} dashboard`);
+            const dashboardUrl = new URL(`/${userRole.toLowerCase().trim()}/dashboard/`,req.url)
+            return NextResponse.redirect(dashboardUrl);
+        }
+        return NextResponse.next();
     }
 
     if(!userId && isAuthenticatedRoute(req)){
