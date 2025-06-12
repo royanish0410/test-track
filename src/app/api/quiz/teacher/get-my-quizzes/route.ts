@@ -1,12 +1,11 @@
 import { NextResponse, NextRequest } from 'next/server'
-import { auth, clerkClient } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 
 export async function GET(request: NextRequest) {
     try {
 
-        // const { userId } = await auth();
-        const userId = "user_2xwfgayWB78AYK2m716oqB5fXoW";
+        const { userId } = await auth();
         const teacherExistence = await prisma.user.findUnique({
             where:{
                 clerkId:userId,
