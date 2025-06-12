@@ -194,24 +194,7 @@ export default function MyQuizzesPage() {
     }
   }
 
-  // Test connection function
-  // const testConnection = async () => {
-  //   try {
-  //     console.log("🔍 Testing connection...")
-  //     const response = await axios.get("/api/test-connection")
-  //     setDebugInfo(response.data)
-  //     setShowDebugInfo(true)
-  //     console.log("✅ Connection test result:", response.data)
-  //   } catch (error: any) {
-  //     console.error("❌ Connection test failed:", error)
-  //     setDebugInfo({
-  //       error: true,
-  //       message: error.response?.data?.error || error.message,
-  //       details: error.response?.data?.details || "Unknown error",
-  //     })
-  //     setShowDebugInfo(true)
-  //   }
-  // }
+ 
 
   const fetchQuizzes = async (showRefreshing = false) => {
     try {
