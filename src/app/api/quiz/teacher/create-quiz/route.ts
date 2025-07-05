@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { auth } from '@clerk/nextjs/server';
 import { NextResponse, NextRequest } from 'next/server'
 
 const generateTheNameString =(name:string,date:Date,number:number)=>{
@@ -10,15 +11,9 @@ const generateTheNameString =(name:string,date:Date,number:number)=>{
 
 export async function POST(request: NextRequest) {
     try {
-        const requestBody = await request.json();
-        const {
-            teacherclerkid,
-            endsAt,
-            duration,
-            quizname,
-            quizSections
-        } = requestBody;
 
+        // const {userId:teacherclerkid} = await auth();
+        const teacherclerkid="user_2yOlSpFoolUR70E3G2y4B7oJmvC";
         if(!teacherclerkid){
             return NextResponse.json({message:"Unauthorized access to create quiz. No teacher id provided"},{status:401});
         }
@@ -36,6 +31,14 @@ export async function POST(request: NextRequest) {
         if(!existenceOfTeacher){
             return NextResponse.json({message:"No teacher exists with the given id."},{status:403});
         }
+
+        const requestBody = await request.json();
+        const {
+            endsAt,
+            duration,
+            quizname,
+            quizSections
+        } = requestBody;
 
         if(duration === undefined || duration<=0){
             return NextResponse.json({
@@ -58,6 +61,14 @@ export async function POST(request: NextRequest) {
         if(!endsAt){
             return NextResponse.json({
                 message:"Ending time of the quiz is not mentioned. It is a necessary field"
+            },{
+                status:400
+            })
+        }
+
+        if((new Date(endsAt)).getTime() < (new Date()).getTime()){
+            return NextResponse.json({
+                message:"The Time stamp you have provided is of past value which is not acceptable."
             },{
                 status:400
             })
@@ -149,10 +160,25 @@ export async function POST(request: NextRequest) {
 
                 console.log("Creating... Questions");
                 for(const Qs of questions){
-                    const {question,options,correctone} = Qs;
+                    const {question,options,correctone,questionImg} = Qs;
+                    if(question && questionImg){
+                        return NextResponse.json({
+                            message:"Provide only one. Either question as text or questionImg URL."
+                        },{
+                            status:400
+                        })
+                    }
+                    if(!question && !questionImg){
+                        return NextResponse.json({
+                            message:"Provide atleast something question or questionImgUrl.",
+                        },{
+                            status:400
+                        })
+                    }
                     const questionObj = await tx.question.create({
                         data:{
-                            question:question,
+                            question:(question && !questionImg)?question:"",
+                            questionImg:(!question && questionImg)?questionImg:"",
                             correctOne: correctone,
                             options:options 
                         },
@@ -161,6 +187,7 @@ export async function POST(request: NextRequest) {
                             question:true,
                             correctOne:true,
                             options:true,
+                            questionImg:true
                         }
                     })
                     console.log("Question document created");

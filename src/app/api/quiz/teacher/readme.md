@@ -24,6 +24,8 @@
 ## Method: POST
 ## Route: /api/quiz/teacher/create-quiz/route.ts
 
+Here in the request body questions, share either question or questionImg, not both. It won't accept both.
+
 ## Request Body >
 ```
 {
@@ -43,7 +45,8 @@
                         "It falls to the ground",
                         "It moves upward"
                     ],
-                    "correctone":"It falls to the ground"
+                    "correctone":"It falls to the ground",
+                    "questionImg":"imgUrl"
                 },
                 {
                     "question":"Why do we feel heavier when an elevator suddenly starts going up?",
@@ -53,7 +56,8 @@
                         "Our weight increases permanently",
                         "Air pressure increases"
                     ],
-                    "correctone":"The floor pushes us up with more force"
+                    "correctone":"The floor pushes us up with more force",
+                    "questionImg":"imgUrl"
                 },
                 {
                     "question": "Why does a metal spoon feel colder than a wooden spoon at the same room temperature?",
@@ -63,7 +67,8 @@
                         "Wood absorbs more heat",
                         "Wood is always warmer"
                     ],
-                    "correctone": "Metal conducts heat away from your hand faster"
+                    "correctone": "Metal conducts heat away from your hand faster",
+                    "questionImg":"imgUrl"
                 },
                 {
                     "question": "Why is it easier to push a trolley on a smooth floor than on a rough one?",
@@ -73,7 +78,8 @@
                         "Gravity is weaker on smooth surfaces",
                         "Wheels don't work on rough floors"
                     ],
-                    "correctone": "Smooth floors have less friction"
+                    "correctone": "Smooth floors have less friction",
+                    "questionImg":"imgUrl"
                 },
                 {
                     "question": "Why do objects float in water but sink in oil sometimes?",
@@ -83,7 +89,8 @@
                         "Water can hold objects better",
                         "Water is denser than oil"
                     ],
-                    "correctone": "Water is denser than oil"
+                    "correctone": "Water is denser than oil",
+                    "questionImg":"imgUrl"
                 }
             ]
         }
