@@ -5,7 +5,8 @@ import prisma from '@/lib/prisma';
 export async function GET(request: NextRequest) {
     try {
 
-        const { userId } = await auth();
+        // const { userId } = await auth();
+        const userId = "user_2yOlSpFoolUR70E3G2y4B7oJmvC"
         const teacherExistence = await prisma.user.findUnique({
             where:{
                 clerkId:userId,
@@ -24,7 +25,11 @@ export async function GET(request: NextRequest) {
 
         const quizData = await prisma.mockQuiz.findMany({
             where:{
-                teacherId:teacherExistence.id
+                teacherId:teacherExistence.id,
+                endsAt:{
+                    gte:new Date()
+                },
+                isDeleted:false
             },
             include:{
                 quizsections:{
