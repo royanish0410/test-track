@@ -29,9 +29,16 @@ export async function GET(request: NextRequest) {
         const pastQuizzes = await prisma.mockQuiz.findMany({
             where:{
                 teacherId:teacherExistence.id,
-                endsAt:{
-                    lt: new Date()
-                }
+                OR:[
+                    {
+                        isDeleted:true
+                    },
+                    {
+                        endsAt:{
+                            lt:new Date()
+                        }
+                    }
+                ]
             },
         })
 
