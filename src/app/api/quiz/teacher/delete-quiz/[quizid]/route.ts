@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server'
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ quizid: string }> }) {
+export async function DELETE(_: NextRequest, { params }: { params: Promise<{ quizid: string }> }) {
     try {
         const { quizid } = await params;
 
@@ -16,28 +16,43 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
                 id:quizid
             },
             select:{
-                id:true
+                id:true,
+                isDeleted:true
             }
         })
 
         if(!existenceOfQuiz){
             return NextResponse.json({
-                message:"No such quiz exists with the given id",
+                message:"No such quiz exists with the given id or hard cleaned",
                 id:quizid
             },{
                 status:400
             })
         }
 
-        const deleteResponse = await prisma.mockQuiz.delete({
+        if(existenceOfQuiz.isDeleted){
+            return NextResponse.json({
+                message:"The quiz of given id to delete is already deleted.",
+                id:quizid
+            },{
+                status:403
+            })
+        }
+
+        const deleteResponse = await prisma.mockQuiz.update({
             where:{
                 id:quizid
-            }
+            },
+            data:{
+                deletedAt: new Date(),
+                isDeleted: true
+            },
         })
 
         if(!deleteResponse){
             return NextResponse.json({
-                message:"Quiz deletion failed"
+                message:"Quiz deletion failed",
+                data:deleteResponse
             },{
                 status:500
             })
