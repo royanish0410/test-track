@@ -51,6 +51,8 @@ model MockQuiz {
   teacher         User              @relation(fields: [teacherId], references: [id])
   quizsections    QuizSection[]
   MockQuizAttempt MockQuizAttempt[]
+  isDeleted Boolean @default(false)
+  deletedAt DateTime?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
 
@@ -69,6 +71,8 @@ model MockQuizAttempt {
   correctAnswers Int
   wrongAnswers   Int
   studentAnswers StudentAnswer[]
+  isDeleted Boolean @default(false)
+  deletedAt DateTime?
   attemptedAt    DateTime        @default(now())
   completedAt    DateTime?
 
@@ -112,6 +116,8 @@ model Subject {
   updatedAt        DateTime          @updatedAt
   quizSection      QuizSection[]
   questionSubjects QuestionSubject[]
+  isDeleted Boolean @default(false)
+  deletedAt DateTime?
 
   @@map("subjects")
 }
@@ -127,6 +133,8 @@ model Question {
   questionSubjects QuestionSubject[]
   questionSection  QuestionSection[]
   StudentAnswer    StudentAnswer[]
+  isDeleted Boolean @default(false)
+  deletedAt DateTime?
 
   @@map("questions")
 }
